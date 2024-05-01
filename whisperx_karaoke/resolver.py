@@ -1,15 +1,4 @@
-from typing import TypedDict, List
-
-class SingleSegment(TypedDict):
-    start: float
-    end: float
-    text: str
-
-
-class TranscriptionResult(TypedDict):
-    segments: List[SingleSegment]
-    language: str
-
+from whisperx.types import TranscriptionResult, SingleSegment
 
 def parse_lrc(
     lrc_content: str, language: str = "en", offset: float = 0
