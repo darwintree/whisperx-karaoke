@@ -63,7 +63,7 @@ def use_lrc_start_and_end(
 def cli():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument(
-        "dir", nargs="+", type=str, help="audio(.mpc, .wav, .opus, .m4a, .aac) & .lrc file directory."
+        "dir", type=str, help="audio(.mpc, .wav, .opus, .m4a, .aac) & .lrc file directory."
     )
     parser.add_argument(
         "--device",
@@ -110,4 +110,5 @@ def cli():
     ass_filename = os.path.join(dir_path, f"{os.path.basename(audio_path)}.ass")
     with open(ass_filename, "w", encoding="utf-8") as f:
         f.write(ass_output)
+        print("ASS file saved to: ", ass_filename)
 
