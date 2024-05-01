@@ -4,55 +4,77 @@ def formatted_word_with_length(text: str, milliseconds: int):
 def insert(s: str, index: int, substring: str):
     return s[:index] + substring + s[index:]
 
+def index_of_last_word_with_time(words):
+    last = -1
+    for i in range(len(words)):
+        word = words[i]
+        if word.get("end"):
+            last = i
+    # if last != -1:
+    #     print(words[last]["word"])
+    return last
+
+def get_duration_mark(duraction_in_seconds: float):
+    return "{\\kf" + str(int(100* duraction_in_seconds)) + "}"
+
 def segment_to_ass_line(segment, next_segment=None):
     words = segment["words"]
-    # next_segment_start = segment["end"]
-    # if next_segment != None:
-    #     next_segment_start = next_segment["start"]
+    studying_substr = "Make it through"
 
     line_prefix = (
         f"Dialogue: 0,{segment['start']:.3f},{segment['end']:.3f},orig,,0,0,0,,"
     )
     last_word_end: float = segment["start"]
     # append word to the line
-    last_index = 0
-    # [{"index": int, "duration": float}]
-    insert_duractions: list = []
+    last_index = -1
     line_lyric: str = segment["text"]
+    # try:
+    #     line_lyric.index(studying_substr)
+    #     print(segment)
+    # except:
+    #     pass
+
+    last_duration_insertion = index_of_last_word_with_time(segment["words"])
+    first_inserted = True
+
     for i in range(len(words)):
         word = words[i]
-        if i == len(words) - 1:
-            # last word
-            word_duration = segment["end"] - last_word_end
-            place_to_insert_duration = line_lyric.index(word["word"], last_index)
-            insert_duractions.append(
-                {"index": place_to_insert_duration, "duration": word_duration}
-            )
-            # duration_mark = "{\\kf" + str(int(100 * word_duration)) + "}"
-            # line_lyric = insert(line_lyric, place_to_insert_duration, duration_mark)
-            continue
         if not word.get("end"):
-            # update last_index pointer
-            if word_index := line_lyric.index(word["word"], last_index) != 0:
-                last_index = word_index
+            last_index = line_lyric.index(word["word"], last_index + 1)
+            # try:
+            #     line_lyric.index(studying_substr)
+            #     print(line_lyric)
+            # except:
+            #     pass
             continue
-        word_duration = word.get("end") - last_word_end
-        place_to_insert_duration = line_lyric.index(word["word"], last_index)
-        insert_duractions.append({
-            "index": place_to_insert_duration,
-            "duration": word_duration,
-        })
-        # duration_mark = "{\\kf" + str(int(100 * word_duration)) + "}"
-        # line_lyric = insert(line_lyric, place_to_insert_duration, duration_mark)
-        # last_index = place_to_insert_duration + len(duration_mark)
-        last_index = place_to_insert_duration
-        last_word_end = word.get("end")
-    # insert from back to front
-    for i in range(len(insert_duractions)):
-        insert_duration = insert_duractions[len(insert_duractions) - 1 - i]
-        duration_mark = "{\\kf" + str(int(100 * insert_duration["duration"])) + "}"
-        line_lyric = insert(line_lyric, insert_duration["index"], duration_mark)
 
+        word_duration = word.get("end") - last_word_end
+        # if this is the last duration insertion, duration takes segment end into account
+        if i == last_duration_insertion:
+            word_duration = segment["end"] - last_word_end
+
+        place_to_insert_duration = line_lyric.index(word["word"], last_index+1)
+        duration_mark = get_duration_mark(word_duration)
+        if first_inserted:
+            line_lyric = insert(line_lyric, 0, duration_mark)
+            first_inserted = False
+        else:
+            line_lyric = insert(line_lyric, place_to_insert_duration, duration_mark)
+
+        last_index = place_to_insert_duration + len(duration_mark)
+        last_word_end = word.get("end")
+        # try:
+        #     line_lyric.index(studying_substr)
+        #     print(i)
+        #     print(line_lyric)
+        # except:
+        #     pass
+    # this means no duration insertion was made
+    # use segment as duration
+    if first_inserted:
+        word_duration = segment["end"] - segment["start"]
+        duration_mark = get_duration_mark(word_duration)
+        line_lyric = insert(line_lyric, 0, duration_mark)
     return line_prefix + line_lyric
 
 
