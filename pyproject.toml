@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=65"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name        = "whisperx-karaoke"
+description = ""
+version     = "0.1.0"
+readme      = "README.md"
+requires-python = ">=3.10"
+authors = [
+  { name= "Darwin" },
+]
+license = { text = "MIT" }
+dependencies = [
+    "whisperx"
+]
+
+[project.scripts]
+whisperx = "whisperx_karaoke.cli:cli"
+
+# [project.urls]
+# "Homepage" =  "https://github.com/m-bain/whisperx"
+
+
+[tool.setuptools]
+py-modules = [ "whisperx_karaoke" ]
+packages = [ "whisperx_karaoke" ]
+include-package-data = true
+# license-files = [ "LICENSE" ]
+
+[tools.setuptools.packages.find]
+exclude = [ "raw*" ]

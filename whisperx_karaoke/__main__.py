@@ -1,3 +1,3 @@
-from .cli import cli
+from whisperx_karaoke.cli import cli
 
 cli()
