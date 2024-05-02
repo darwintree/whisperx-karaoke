@@ -1,10 +1,16 @@
 # README
 
+<a target="_blank" href="https://colab.research.google.com/github/darwintree/whisperx-karaoke/blob/main/main.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
 ## 介绍
 
 借助whisperx生成卡拉ok歌词所需的k轴ass文件。注意，生成的准确性与输入质量相关，请确保lrc文件的时间戳准确。
 
 ## 使用
+
+可以在windows本地使用或者在 Colab 中运行
 
 需要准备输入：
 
@@ -13,7 +19,17 @@
 
 之后在任意位置新建文件夹，放入这两个文件即可。
 
-## 安装
+### 在 Colab 中运行
+
+<a target="_blank" href="https://colab.research.google.com/github/darwintree/whisperx-karaoke/blob/main/main.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
+选择运行时为 GPU，在默认工作文件夹内新建`raw`文件夹，之后将音频文件与lrc文件放入其中。依次执行单元格即可。
+
+### 在本地运行
+
+#### 安装依赖
 
 ```shell
 conda install pytorch==2.0.0 torchaudio==2.0.0 pytorch-cuda=11.8 -c pytorch -c nvidia
@@ -21,7 +37,7 @@ pip install git+https://github.com/m-bain/whisperx.git
 pip install whisperx-karaoke
 ```
 
-## 使用
+#### 运行
 
 例如文件被放置在了 `./raw/song1` 文件夹内
 
