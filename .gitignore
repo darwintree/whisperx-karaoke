@@ -5,3 +5,4 @@
 *.lrc
 **.egg-info
 dist/**
+.env
