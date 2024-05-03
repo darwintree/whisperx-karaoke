@@ -21,20 +21,21 @@ def get_duration_mark(duraction_in_seconds: float):
 
 def segment_to_ass_line(segment: SingleAlignedSegment, next_segment=None):
     words = segment["words"]
-    studying_substr = "Make it through"
+    studying_substr = ""
 
     line_prefix = (
-        f"Dialogue: 0,{segment['start']:.3f},{segment['end']:.3f},orig,,0,0,0,,"
+        f"Dialogue: 0,{segment['start']:.2f},{segment['end']:.2f},orig,,0,0,0,,"
     )
     last_word_end: float = segment["start"]
     # append word to the line
     last_index = -1
     line_lyric: str = segment["text"]
-    # try:
-    #     line_lyric.index(studying_substr)
-    #     print(segment)
-    # except:
-    #     pass
+    try:
+        if studying_substr:
+            line_lyric.index(studying_substr)
+            print(segment)
+    except:
+        pass
 
     last_duration_insertion = index_of_last_word_with_time(segment["words"])
     first_inserted = True
@@ -43,11 +44,12 @@ def segment_to_ass_line(segment: SingleAlignedSegment, next_segment=None):
         word = words[i]
         if not word.get("end"):
             last_index = line_lyric.index(word["word"], last_index + 1)
-            # try:
-            #     line_lyric.index(studying_substr)
-            #     print(line_lyric)
-            # except:
-            #     pass
+            try:
+                if studying_substr:
+                    line_lyric.index(studying_substr)
+                    print(line_lyric)
+            except:
+                pass
             continue
 
         word_duration = word.get("end") - last_word_end
@@ -65,12 +67,13 @@ def segment_to_ass_line(segment: SingleAlignedSegment, next_segment=None):
 
         last_index = place_to_insert_duration + len(duration_mark)
         last_word_end = word.get("end")
-        # try:
-        #     line_lyric.index(studying_substr)
-        #     print(i)
-        #     print(line_lyric)
-        # except:
-        #     pass
+        try:
+            if studying_substr:
+                line_lyric.index(studying_substr)
+                print(i)
+                print(line_lyric)
+        except:
+            pass
 
     # this means no duration insertion was made
     # use segment as duration

@@ -102,6 +102,7 @@ def cli():
         audio,
         device,
         return_char_alignments=False,
+        print_progress=True
     )
 
     use_lrc_start_and_end(result["segments"], cleared["segments"])
