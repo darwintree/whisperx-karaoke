@@ -1,4 +1,5 @@
 from whisperx.types import SingleAlignedSegment, SingleWordSegment
+import datetime
 
 def formatted_word_with_length(text: str, milliseconds: int):
     return "{\\kf" + str(milliseconds) + "}" + text
@@ -19,13 +20,20 @@ def index_of_last_word_with_time(words: list[SingleWordSegment]):
 def get_duration_mark(duraction_in_seconds: float):
     return "{\\kf" + str(int(100* duraction_in_seconds)) + "}"
 
+
+def convert_seconds_to_hhmmss(seconds):
+    time_delta = datetime.timedelta(seconds=seconds)
+    hours = time_delta.seconds // 3600
+    minutes = (time_delta.seconds % 3600) // 60
+    seconds = time_delta.seconds % 60
+    return f"{hours:02d}:{minutes:02d}:{seconds:2f}"
+
+
 def segment_to_ass_line(segment: SingleAlignedSegment, next_segment=None):
     words = segment["words"]
     studying_substr = ""
 
-    line_prefix = (
-        f"Dialogue: 0,{segment['start']:.2f},{segment['end']:.2f},orig,,0,0,0,,"
-    )
+    line_prefix = f"Dialogue: 0,{convert_seconds_to_hhmmss(segment['start'])},{convert_seconds_to_hhmmss(segment['end'])},orig,,0,0,0,,"
     last_word_end: float = segment["start"]
     # append word to the line
     last_index = -1
